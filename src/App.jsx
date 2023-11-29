@@ -20,16 +20,20 @@ export default class App extends Component {
   onDeleteHandler(id) {
     console.log(id);
     const notes = this.state.notes.filter((note) => note.id !== id);
+    const notesBackupData = this.state.notesBackup.filter((note) => note.id !== id);
     this.setState({ notes });
+    this.setState({ notesBackup: notesBackupData });
     console.log("berhasil delete");
   }
   onArchiveHandler(id) {
-    console.log(id);
     const notes = this.state.notes.find((note) => note.id === id);
+    const notesBackup = this.state.notesBackup.find((note) => note.id === id);
     notes.archived = !notes.archived;
+    notesBackup.archived = notes.archived;
     this.setState((prev) => {
       return {
         notes: [...prev.notes],
+        notesDataBackUp: [...prev.notesBackup],
       };
     });
   }
@@ -56,7 +60,17 @@ export default class App extends Component {
         notes: [
           ...prev.notes,
           {
-            id: Math.floor(Math.random() * 100),
+            id: +new Date(),
+            title,
+            body,
+            createdAt: Date.now(),
+            archived: false,
+          },
+        ],
+        notesBackup: [
+          ...prev.notes,
+          {
+            id: +new Date(),
             title,
             body,
             createdAt: Date.now(),
